@@ -6,8 +6,7 @@ class BootStrap {
         environments {
             development {
                 30.times {
-                    User user = new User(email: "user${it}@example.com", name: "User${it}")
-                    user.save(flush: true, failOnError: true)
+                    User.build()
                 }
             }
         }
