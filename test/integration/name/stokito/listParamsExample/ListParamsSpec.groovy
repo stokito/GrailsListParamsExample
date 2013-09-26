@@ -22,17 +22,14 @@ class ListParamsSpec extends IntegrationSpec {
         }
     }
 
-    def cleanup() {
-    }
-
     void testMax() {
         given:
         ListParams listParams = new ListParams(max: 1, sort: 'email')
         when:
         List<User> users = User.list(listParams.params)
         then:
-        assert users.size() == 1
-        assert users[0] == fixture.user1
+        users.size() == 1
+        users[0] == fixture.user1
     }
 
     void testOffset() {
@@ -41,8 +38,8 @@ class ListParamsSpec extends IntegrationSpec {
         when:
         List<User> users = User.list(listParams.params)
         then:
-        assert users.size() == 1
-        assert users[0] == fixture.user2
+        users.size() == 1
+        users[0] == fixture.user2
     }
 
 }
