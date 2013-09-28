@@ -1,9 +1,8 @@
 package name.stokito.listParamsExample
 
-
+import grails.transaction.Transactional
 
 import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class UserController {
@@ -12,12 +11,20 @@ class UserController {
 
     def index(UserListFilter filter) {
         def criteria = User.where {
-            email == filter.email
-            name =~ filter.name
-            dateCreated >= filter.dateCreatedFrom
-            dateCreated <= filter.dateCreatedTo
+            if (filter.email) {
+                email == filter.email
+            }
+            if (filter.name) {
+                name =~ '%' + filter.name + '%'
+            }
+            if (filter.dateCreatedFrom) {
+                dateCreated >= filter.dateCreatedFrom
+            }
+            if (filter.dateCreatedTo) {
+                dateCreated <= filter.dateCreatedTo
+            }
         }
-        respond criteria.list(filter.params), model:[userInstanceCount: criteria.count()]
+        respond criteria.list(filter.params), model: [userInstanceCount: criteria.count(), filter: filter]
     }
 
     def show(User userInstance) {
@@ -36,11 +43,11 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'create'
+            respond userInstance.errors, view: 'create'
             return
         }
 
-        userInstance.save flush:true
+        userInstance.save flush: true
 
         request.withFormat {
             form {
@@ -63,18 +70,18 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'edit'
+            respond userInstance.errors, view: 'edit'
             return
         }
 
-        userInstance.save flush:true
+        userInstance.save flush: true
 
         request.withFormat {
             form {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
                 redirect userInstance
             }
-            '*'{ respond userInstance, [status: OK] }
+            '*' { respond userInstance, [status: OK] }
         }
     }
 
@@ -86,14 +93,14 @@ class UserController {
             return
         }
 
-        userInstance.delete flush:true
+        userInstance.delete flush: true
 
         request.withFormat {
             form {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect action:"index", method:"GET"
+                redirect action: "index", method: "GET"
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
@@ -103,7 +110,7 @@ class UserController {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'userInstance.label', default: 'User'), params.id])
                 redirect action: "index", method: "GET"
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }

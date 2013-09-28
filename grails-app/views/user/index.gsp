@@ -20,6 +20,13 @@
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
+
+            <g:form action="index" method="GET">
+                <input type="text" name="email" placeholder="email" value="${filter.email}"/>
+                <input type="text" name="name" placeholder="name" value="${filter.name}"/>
+                <input type="submit" value="Filter!"/>
+            </g:form>
+
 			<table>
 			<thead>
 					<tr>
