@@ -6,6 +6,5 @@ import groovy.transform.EqualsAndHashCode
 class User {
     String email
     String name
-    static constraints = {
-    }
+    Date dateCreated
 }
