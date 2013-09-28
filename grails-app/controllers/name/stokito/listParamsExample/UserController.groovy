@@ -10,8 +10,14 @@ class UserController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(ListParams listParams) {
-        respond User.list(listParams.params), model:[userInstanceCount: User.count()]
+    def index(UserListFilter filter) {
+        def criteria = User.where {
+            email == filter.email
+            name =~ filter.name
+            dateCreated >= filter.dateCreatedFrom
+            dateCreated <= filter.dateCreatedTo
+        }
+        respond criteria.list(filter.params), model:[userInstanceCount: criteria.count()]
     }
 
     def show(User userInstance) {
