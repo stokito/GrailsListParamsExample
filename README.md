@@ -1,4 +1,4 @@
-# GrailsListParamsExample
+# Grails list params as command object example
 
 Example of Grails application that uses list params (`max`, `offset`, `sort`) wraped to command object
 
