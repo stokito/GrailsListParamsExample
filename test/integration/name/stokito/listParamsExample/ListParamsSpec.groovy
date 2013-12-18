@@ -9,21 +9,15 @@ class ListParamsSpec extends IntegrationSpec {
 
     FixtureLoader fixtureLoader
 
-    @Shared
-    Fixture fixture
-
-    def setup() {
-        fixture = fixtureLoader.load {
+    void testMax() {
+        given:
+        Fixture fixture = fixtureLoader.load {
             build {
                 user1(User, email: 'user1@example.com')
                 user2(User, email: 'user2@example.com')
                 user3(User, email: 'user3@example.com')
             }
         }
-    }
-
-    void testMax() {
-        given:
         ListParams listParams = new ListParams(max: 1, sort: 'email')
         when:
         List<User> users = User.list(listParams.params)
@@ -34,6 +28,13 @@ class ListParamsSpec extends IntegrationSpec {
 
     void testOffset() {
         given:
+        Fixture fixture = fixtureLoader.load {
+            build {
+                user1(User, email: 'user1@example.com')
+                user2(User, email: 'user2@example.com')
+                user3(User, email: 'user3@example.com')
+            }
+        }
         ListParams listParams = new ListParams(max: 1, offset: 1, sort: 'email')
         when:
         List<User> users = User.list(listParams.params)
